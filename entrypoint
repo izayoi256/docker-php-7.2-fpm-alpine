@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+echo "xdebug.remote_host=${XDEBUG_REMOTE_HOST:-$(ip route | awk 'NR==1 {print $3}')}" >> /usr/local/etc/php/conf.d/my.ini
+
+if [ -n "${HOST_UID}" ]; then
+    usermod -u "${HOST_UID}" www-data
+fi
+
+if [ -n "${HOST_GID}" ]; then
+    groupmod -g "${HOST_GID}" www-data
+fi
+
+if [ -e "composer.json" ]; then
+    sudo -u www-data composer install
+fi
+
+if [ "${1#-}" != "$1" ]; then
+	set -- docker-php-entrypoint "$@"
+fi
+
+exec "$@"
