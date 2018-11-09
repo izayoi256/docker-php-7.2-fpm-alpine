@@ -29,7 +29,6 @@ RUN set -x \
         tzdata \
     && rm -rf /tmp/*
 
-COPY ./my.ini /usr/local/etc/php/conf.d/my.ini
 COPY ./entrypoint /usr/local/bin/
 
 ENTRYPOINT ["entrypoint"]
