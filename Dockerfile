@@ -2,7 +2,8 @@ FROM php:7.2-fpm-alpine
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-RUN curl -sS https://getcomposer.org/installer \
+RUN set -x \
+    && curl -sS https://getcomposer.org/installer \
     |  php -- \
         --filename=composer \
         --install-dir=/usr/local/bin \
@@ -10,8 +11,7 @@ RUN curl -sS https://getcomposer.org/installer \
     && sudo -u www-data composer config -g repos.packagist composer https://packagist.jp \
     && sudo -u www-data composer global require --optimize-autoloader hirak/prestissimo
 
-RUN set -x \
-    && apk add --no-cache --virtual .phpize_deps \
+RUN apk add --no-cache --virtual .phpize_deps \
         ${PHPIZE_DEPS} \
         zlib-dev \
     && pecl install \
